@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- <svg width="1000px" height="100px">
+    </svg> -->
+    <h3>Functional Programming 이란 무엇인가요? 어떤 장점이 있나요?</h3>
+    <pre>
+        1. Functional programming은 기존 programming과는 다르게 읽기편한 clean 코드를 작성해서 문제점들을
+        감소시키는 programming입니다.
+        예를들면,
+        기존 programming:
+    
+        let arr = ['a', 'b', 'c']
+        for (let i = 0; i < arr.length; i++) { 
+            arr[i]=arr[i] + 'v' 
+        } 
+        
+        현재 arr는 ['av', 'bv' , 'cv' ]
+
+        Functional Programming:
+        
+            let arr=['a', 'b' , 'c' ] 
+            let newArr=arr.map((ele)=> {return ele + 'v'})
+        
+        현재 newArr는 ['av', 'bv', 'cv']
+
+        결과적으로 두 programming은 같은 결과를 만들지만, Functional programming은 좀더 clean한 코드로
+        작성을 합니다. 그리고 기존 programming은 arr의값이 변화됬지만, functional programming에서는 arr의값은
+        변화하지 않았습니다. Functional programming은 기존 데이터를 변화시키지 않으려고 합니다.
+        Application이 커질수록, functional programming은 코드양을 많이 감소 시킬수 있습니다.
+
+        2. Functional programming은 pure function을 많이 사용하려고 합니다. Pure function은 같은 parameter가
+        주어졌을때 같은 결과를 리턴하는 function입니다. Impure function은 같은 parameter가 주어졌을때 다른
+        결과를 리턴하는 function입니다. Pure function을 많이 이용함으로써 많은 에러들을 감소시킬수 있습니다.
+    </pre>
+    <h3>아래 코드의 의미를 파악해서 서술하세요.</h3>
+    <pre>
+        function foo (left, right) {
+            let resultArray = [], leftIndex = 0, rightIndex = 0;
+          
+            while (leftIndex < left.length && rightIndex < right.length) {
+              if (left[leftIndex] < right[rightIndex]) {
+                resultArray.push(left[leftIndex]);
+                leftIndex++; 
+              } else {
+                resultArray.push(right[rightIndex]);
+                rightIndex++;
+              }
+            }
+          console.log(resultArray
+            .concat(left.slice(leftIndex))
+            .concat(right.slice(rightIndex)))
+            return resultArray
+                    .concat(left.slice(leftIndex))
+                    .concat(right.slice(rightIndex));
+          }
+    </pre>
+    <hr />
+    <pre>
+        function foo 마지막코드를 보면 resultArr.concat(left.slice(leftIndex)) 부분이 있습니다.
+        concat을 사용하였기때문에 left.slice(leftIndex)와 left는 array일것이라 추측을했습니다. 
+        마찬가지로, right.slice(leftIndex)와 right는 array일것이라 추측을했습니다. 
+        코드 if (left[leftIndex] < right[rightIndex]) 부분을보고, left와 right가 숫자들을 포함하고
+        있다고 추측을 했습니다. 이 정보들을 바탕으로 먼저 function foo를 이용하여 몇가지 테스트를
+        했습니다.
+ 
+        Case 1: left 와 right는 정렬이된 상태
+        예를들어, foo([-5, -1, 7], [-2, 1, 4, 11])를 실행하면 [-5, -2, -1, 1, 4, 7, 11]라는 결과물을 리턴합니다.
+        Case 2: left 와 right는 정렬이되지 않은 상태
+        예를들어, foo([7, -1, -5], [11, 4, -2, 1])를 실행하면 [7, -1, -5, 11, 4, -2, 1]라는 결과물을 리턴합니다.
+        
+        Case 2를 보면 단순히 left와 right를 합쳐서 리턴했지만, Case 1을 보면 left와 right의 포함된 모든 숫자들을 
+        정렬해서 하나의 array로 리턴했습니다. 이정보들을 바탕으로, function foo는 정렬된 left와 right array들을 
+        하나의 정렬된 array로 리턴한다고 추측했습니다. 코드를 처음부터 다시 살펴보면, 먼저 function foo는 정렬된 
+        left와 right array들을받습니다. 처음 leftIndex값 0은 left.length값 3 보다작고 rightIndex값 0은 
+        right.length값 4보다 작으므로, 첫 while문을 통과합니다. left[0]값 -5는 right[0]값 -2보다 작으므로, 
+        resultArray에 left[0]값을추가합니다. 그리고 leftIndex값은 1을 더해 1이 됩니다. leftIndex값 1은 
+        left.length값 3 보다 작고 rightIndex값과 right.length는 변화가 없으므로, 두번째 while문을 통과합니다. 
+        left[1]값 -1은 right[0]값 -2보다 크기때문에, resultArray에 right[0]값을 추가합니다. 그리고 rightIndex값은 
+        1을 더해 1이 됩니다. 현재까지 resultArray는 -5, -2를 포함한 상태입니다. 이런식으로 while문을 
+        계속통과해서 resultArray에 left와 right array에 포함된 숫자들을 추가를하면, 결과적으로 resultArray에는 
+        left와 right array에 포함된 숫자들이 정렬된 상태로 저장되는 것입니다. 마지막에 concat을 사용하는 
+        이유는 while문을 통과하지못해서 추가하지 못한 나머지 숫자들을 resultArray에 추가하는 작업을 
+        하는 것입니다. 최종적으로 function foo는 정렬된 숫자들을 포함한 array를 리턴하는 것입니다.
+    </pre>
+    <h3>a 값을 기준으로 오름차순으로 정렬하고 a값이 같다면 b값을 기준으로 내림차순하여 정렬합니다.</h3>
+    <pre>
+        Input: 
+        [
+        { a: 10, b: 5 },
+        { a: 7, b: 4 },
+        { a: 7, b: 5 },
+        { a: 15, b: 1 },
+        { a: 10, b: 2 }
+        ]
+
+        Output: 
+        [
+        { a: 7, b: 5 },
+        { a: 7, b: 4 },
+        { a: 10, b: 5 },
+        { a: 10, b: 2 },
+        { a: 15, b: 1 }
+        ]
+    </pre>
+    <hr />
+    <pre>
+        const orderArr = (arr) => {
+            arr.sort((x, y) => {
+            if (x.a > y.a) {
+                return 1
+            }
+            else if (x.a < y.a) {
+                return -1
+            }
+            else if (x.a == y.a) {
+                if (x.b > y.b) {
+                    return -1
+                }
+                else if (x.b < y.b) {
+                    return 1
+                }
+                else if (x.b == y.b) {
+                    return 0
+                }
+            }
+            })
+            return arr
+            }
+    </pre>
+    <button onclick="startOrderArr()">결과보기</button>
+    <p>Console창에서 확인해주세요.</p>
+    <h3>자연수 x부터 y까지의 합을 구하는 코드를 작성하세요. Javascript에서 반복문(for ...)을 사용하지 않아야 함.</h3>
+    <pre>
+        const sumNat = (start, end) => {
+            if (start == end) {
+                return start
+            }
+            let arr = Array.apply(null, Array(end - start + 1))
+            let i = 0
+            let newArr = []
+            arr.forEach((ele) => {
+                newArr.push(i + start)
+                i++
+            })
+            let sum = newArr.reduce((a, b) => { return a + b })
+            return sum
+        }
+    </pre>
+    <h3>트리 구조를 표현하는 데이터셋을 만드세요.</h3>
+    <pre>
+        let dataSet = {
+            "name": 1,
+            "children": [
+                {
+                    "name": 3,
+                    "children": [
+                        {
+                            "name": 5
+                        },
+                        {
+                            "name": 6
+                        }
+                    ]
+                },
+                {
+                    "name": 4
+                }
+            ]
+        }
+    </pre>
+    <h3>데이터셋이 주어졌을때 최대값을 찾는 함수를 만드세요.</h3>
+    <pre>
+        let findMax = (given) => {
+            let record = (data) => {
+                let arr = []
+                let firstChildren = data.hasOwnProperty('children')
+                if (firstChildren) {
+                    arr.push(data['name'])
+                    const findChildren = (children) => {
+                        for (let i = 0; i < children.length; i++) {
+                            arr.push(children[i].name)
+                            if (children[i].hasOwnProperty('children')) {
+                                findChildren(children[i]['children'])
+                            }
+                        }
+                    }
+                    let childrenArr = data['children']
+                    findChildren(childrenArr)
+                    console.log(arr)
+                    return arr
+                }
+                else {
+                    arr.push(data['name'])
+                    console.log(arr)
+                    return arr
+                }
+            }
+            let recorded = record(given)
+            recorded.sort((a, b) => {
+                if (a > b) {
+                    return 1
+                }
+                else if (a < b) {
+                    return -1
+                }
+                else {
+                    return 0
+                }
+            })
+            let max = recorded[recorded.length - 1]
+            console.log(max)
+            return max
+        }
+    </pre>
+    <button onclick="startFindMax()">결과보기</button>
+    <p>Console창에서 확인해주세요.</p>
+    <h3>아래 문제를 해결하는 코드를 작성하세요.</h3>
+    <pre>
+        N 개의 정수로 이뤄진 배열 A가 주어졌을 때 배열의 연속된 부분(P ~ Q, 0 <= P <= Q < N)의 합이 0 이상이면서 
+        최대가 되는 영역과 최대값을 반환하는 함수를 구현하세요. 이 조건을 만족시키는 조합이 
+        없다면 max 값에 -1를 반환합니다.
+
+        const A = [1, 2, -3, 4, 5, -6]; 
+
+        const { range: [ P, Q ] , max } = resolve(A);
+    </pre>
+    <hr />
+    <pre>
+        let solution = (arr) => {
+            let newArr = []
+            for (let i = 0; i < arr.length; i++) {
+                let s = ''
+                s = s + arr[i]
+                newArr.push(s)
+                if (i == arr.length - 1) {
+                    break
+                }
+                for (let j = i + 1; j < arr.length; j++) {
+                    s = s + '+' + arr[j]
+                    newArr.push(s)
+                }
+            }
+            let newArr2 = []
+            for (let i = 0; i < newArr.length; i++) {
+                newArr2.push({ express: newArr[i], sum: eval(newArr[i]) })
+            }
+            for (let i = 0; i < newArr2.length; i++) {
+                newArr2.sort((a, b) => {
+                    if (a.sum > b.sum) {
+                        return 1
+                    }
+                    else if (a.sum < b.sum) {
+                        return -1
+                    }
+                    else if (a.sum == b.sum) {
+                        return 0
+                    }
+                })
+            }
+            let max = (newArr2[newArr2.length - 1]).sum
+            let express = (newArr2[newArr2.length - 1]).express
+            let expressArr = express.split('+')
+            for (let i = 0; i < expressArr.length; i++) {
+                expressArr[i] = parseInt(expressArr[i])
+            }
+            if (max >= 0) {
+                console.log({ expressArr, max })
+                return { expressArr, max }
+            }
+            else {
+                console.log({ expressArr, max: -1 })
+                return { expressArr, max: -1 }
+            }
+        }
+    </pre>
+    <button onclick="startSolution()">결과보기</button>
+    <p>Console창에서 확인해주세요.</p>
+    <h3>반복되는 Component에 key를 지정하지 않으면 나타날 수 있는 문제가 어떤 것인지 설명하세요.</h3>
+    <pre>
+        <a href="https://5owyc.csb.app" target="_blank">https://5owyc.csb.app</a> 또는 <a href="https://codesandbox.io/s/falling-cherry-5owyc" target="_blank">https://codesandbox.io/s/falling-cherry-5owyc</a> 를보시면,
+        윗 부분이 key를 설정하지 않은 반복되는 Component이고
+        아랫 부분이 key를 설정한 반복되는 Component입니다. 
+        console창을 여시면 빨간색으로 메시지가 나옵니다:
+        Warning: Each child in a list should have a unique "key" prop.
+        Warning 아래에있는 link를 클릭해 보시면, Key는 어떤 아이템들이 변화가있었는지를 식별하는데 도움을 
+        준다고 나와있습니다. 적절한 Key를 설정하지 않으면 Component state와 Performance에 네거티브한 
+        영향을 줄수 있다고 나와있습니다. 
+    </pre>
+    <h3>Component를 unmount할 때 clean up을 하는 이유와 하지 않을 때 나타날 수 있는 문제를 설명하세요. 명확한 예제를 들어 설명할 수 있으면 더욱 좋습니다.</h3>
+    <pre>
+        <a href="https://x4j6x.csb.app" target="_blank">https://x4j6x.csb.app</a> 또는 <a href="https://codesandbox.io/s/modest-fast-x4j6x" target="_blank">https://codesandbox.io/s/modest-fast-x4j6x</a> 를보시면,
+        Click 버튼을 클릭하시면 Test component를 mount 하거나 unmount하는 것을 볼수 있습니다.
+        Test component를 보시면, componentDidMount를 이용해서 localStorage에 "test"를 저장하였고,
+        componentWillUnmount를 이용해서 localStorage에있는 모든 저장된것들을 clear 했습니다. 
+        Component를 unmount할때 clean up을 하는 이유는 필요없는 데이터를 계속 저장하지 않음
+        으로써 performance를 유지 또는 향상시키기 위함입니다. Clean up을 하지 않으면, 필요없는 데이터를
+        계속 저장함으로써 performance 문제가 생길 수 있습니다. 
+    </pre>
+    <h3>사칙연산을 할 수 있는 계산기를 만들어 보세요.</h3>
+    <p>계산기 앱:</p>
+    <a href="https://codepen.io/12parkhy/full/qBdgyvZ" target="_blank">https://codepen.io/12parkhy/full/qBdgyvZ</a>
+    <p>Change View를 클릭하시고 Editor View를 클릭하시면 Source Code를 보실수 있습니다.</p>
+    <script defer src="https://d3js.org/d3.v6.min.js"></script>
+    <script defer src="test.js"></script>
+</body>
+
+</html>
